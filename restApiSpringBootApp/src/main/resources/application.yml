@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+spring:
+  freemarker:
+    template-loader-path: classpath:/templates
+    suffix: .ftl
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/restApi
+    driver-class-name: org.h2.Driver
+    username: sa
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate.hbm2ddl.auto: create
+    show-sql: true
