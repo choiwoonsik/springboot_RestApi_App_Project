@@ -1,5 +1,6 @@
 package com.restApi.restApiSpringBootApp.controller.v1;
 
+import com.restApi.restApiSpringBootApp.advice.exception.UserNotFoundCException;
 import com.restApi.restApiSpringBootApp.entity.User;
 import com.restApi.restApiSpringBootApp.model.response.CommonResult;
 import com.restApi.restApiSpringBootApp.model.response.ListResult;
@@ -22,17 +23,21 @@ public class UserController {
     private final ResponseService responseService;
 
     @ApiOperation(value = "회원 단건 검색", notes = "userId로 회원을 조회합니다.")
-    @GetMapping("/user/{userId}")
-    public SingleResult<User> findUserByKey(@ApiParam(value = "회원 ID", required = true) @PathVariable Long userId) {
+    @GetMapping("/user/id/{userId}")
+    public SingleResult<User> findUserById
+            (@ApiParam(value = "회원 ID", required = true) @PathVariable Long userId) {
         return responseService
-                .getSingleResult(userJpaRepo.findById(userId).orElse(null));
+                .getSingleResult(userJpaRepo.findById(userId).orElseThrow(UserNotFoundCException::new));
     }
 
     @ApiOperation(value = "회원 단건 검색 (이메일)", notes = "이메일로 회원을 조회합니다.")
-    @GetMapping("/user/{email}")
-    public SingleResult<User> findUserByEmail(@ApiParam(value = "회원 이메일", required = true) @PathVariable String email) {
-        return responseService
-                .getSingleResult(userJpaRepo.findByEmail(email));
+    @GetMapping("/user/email/{email}")
+    public SingleResult<User> findUserByEmail
+            (@ApiParam(value = "회원 이메일", required = true) @PathVariable String email) {
+        User user = userJpaRepo.findByEmail(email);
+        if (user == null) throw new UserNotFoundCException();
+        else return responseService
+                .getSingleResult(user);
     }
 
     @ApiOperation(value = "회원 목록 조회", notes = "모든 회원을 조회합니다.")
@@ -44,8 +49,9 @@ public class UserController {
 
     @ApiOperation(value = "회원 등록", notes = "회원을 등록합니다.")
     @PostMapping("/user")
-    public SingleResult<User> save(@ApiParam(value = "회원 이메일", required = true) @RequestParam String email,
-                                   @ApiParam(value = "회원 이름", required = true) @RequestParam String name) {
+    public SingleResult<User> save(
+            @ApiParam(value = "회원 이메일", required = true) @RequestParam String email,
+            @ApiParam(value = "회원 이름", required = true) @RequestParam String name) {
         User user = User.builder()
                 .email(email)
                 .name(name)
@@ -55,9 +61,10 @@ public class UserController {
 
     @ApiOperation(value = "회원 수정", notes = "회원 정보를 수정합니다.")
     @PutMapping("/user")
-    public SingleResult<User> modify(@ApiParam(value = "회원 아이디", required = true) @RequestParam Long userId,
-                                     @ApiParam(value = "회원 이메일", required = true) @RequestParam String email,
-                                     @ApiParam(value = "회원 이름", required = true) @RequestParam String name) {
+    public SingleResult<User> modify(
+            @ApiParam(value = "회원 아이디", required = true) @RequestParam Long userId,
+            @ApiParam(value = "회원 이메일", required = true) @RequestParam String email,
+            @ApiParam(value = "회원 이름", required = true) @RequestParam String name) {
         User user = User.builder()
                 .userId(userId)
                 .email(email)
@@ -68,7 +75,8 @@ public class UserController {
 
     @ApiOperation(value = "회원 삭제", notes = "회원을 삭제합니다.")
     @DeleteMapping("/user/{userId}")
-    public CommonResult delete(@ApiParam(value = "회원 아이디", required = true) @PathVariable Long userId) {
+    public CommonResult delete(
+            @ApiParam(value = "회원 아이디", required = true) @PathVariable Long userId) {
         userJpaRepo.deleteById(userId);
         return responseService.getSuccessResult();
     }
