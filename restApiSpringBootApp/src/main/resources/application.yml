@@ -14,4 +14,4 @@ spring:
     properties:
       hibernate.hbm2ddl.auto: create
     show-sql: true
-    open-in-view: true
+    open-in-view: false
