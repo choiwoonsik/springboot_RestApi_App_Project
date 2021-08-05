@@ -3,11 +3,13 @@ package com.restApi.restApiSpringBootApp.service;
 import com.restApi.restApiSpringBootApp.model.response.CommonResult;
 import com.restApi.restApiSpringBootApp.model.response.ListResult;
 import com.restApi.restApiSpringBootApp.model.response.SingleResult;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class ResponseService {
 
     // 단일건 결과 처리 메소드
@@ -34,9 +36,10 @@ public class ResponseService {
     }
 
     // 실패 결과만 처리
-    public CommonResult getFailResult() {
+    public CommonResult getFailResult(int code, String msg) {
         CommonResult result = new CommonResult();
-        setFailResult(result);
+        result.setSuccess(false);
+        setFailResult(result, code, msg);
         return result;
     }
 
@@ -48,9 +51,9 @@ public class ResponseService {
     }
 
     // API 요청 실패 시 응답 모델을 실패 데이터로 세팅
-    private void setFailResult(CommonResult result) {
+    private void setFailResult(CommonResult result, int code, String msg) {
         result.setSuccess(false);
-        result.setCode(CommonResponse.FAIL.getCode());
-        result.setMsg(CommonResponse.FAIL.getMsg());
+        result.setCode(code);
+        result.setMsg(msg);
     }
 }

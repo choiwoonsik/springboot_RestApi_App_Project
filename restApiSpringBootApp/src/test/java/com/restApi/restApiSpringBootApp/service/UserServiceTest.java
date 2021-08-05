@@ -1,6 +1,7 @@
 package com.restApi.restApiSpringBootApp.service;
 
 import com.restApi.restApiSpringBootApp.advice.exception.UserNotFoundCException;
+import com.restApi.restApiSpringBootApp.controller.v1.UserController;
 import com.restApi.restApiSpringBootApp.dto.user.UserRequestDto;
 import com.restApi.restApiSpringBootApp.entity.User;
 import com.restApi.restApiSpringBootApp.repository.UserJpaRepo;
@@ -8,6 +9,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,7 +49,7 @@ class UserServiceTest {
         Assertions.assertThat(userA.getName()).isEqualTo(userB.getName());
         Assertions.assertThat(userA.getEmail()).isEqualTo(userB.getEmail());
         Assertions.assertThat(
-                userService.findById(saveId).getEmail())
+                        userService.findById(saveId).getEmail())
                 .isEqualTo(userJpaRepo.findById(saveId).get().getEmail());
     }
 

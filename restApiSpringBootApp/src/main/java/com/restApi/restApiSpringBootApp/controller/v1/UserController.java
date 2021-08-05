@@ -24,17 +24,25 @@ public class UserController {
     private final UserService userService;
     private final ResponseService responseService;
 
+    @ApiOperation(value = "서버 테스트", notes = "서버 작동 확인")
+    @GetMapping("/hello")
+    public SingleResult<String> hello() {
+        return responseService.getSingleResult("hello");
+    }
+
     @ApiOperation(value = "회원 단건 검색", notes = "userId로 회원을 조회합니다.")
     @GetMapping("/user/id/{userId}")
     public SingleResult<UserRequestDto> findUserById
-            (@ApiParam(value = "회원 ID", required = true) @PathVariable Long userId) {
+            (@ApiParam(value = "회원 ID", required = true) @PathVariable Long userId,
+             @ApiParam(value = "언어", defaultValue = "ko") @RequestParam String lang) {
         return responseService.getSingleResult(userService.findById(userId));
     }
 
     @ApiOperation(value = "회원 단건 검색 (이메일)", notes = "이메일로 회원을 조회합니다.")
     @GetMapping("/user/email/{email}")
     public SingleResult<UserRequestDto> findUserByEmail
-            (@ApiParam(value = "회원 이메일", required = true) @PathVariable String email) {
+            (@ApiParam(value = "회원 이메일", required = true) @PathVariable String email,
+             @ApiParam(value = "언어", defaultValue = "ko") @RequestParam String lang) {
         return responseService.getSingleResult(userService.findByEmail(email));
     }
 
