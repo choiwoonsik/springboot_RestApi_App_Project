@@ -2,8 +2,9 @@ package com.restApi.restApiSpringBootApp.service;
 
 import com.restApi.restApiSpringBootApp.advice.exception.UserNotFoundCException;
 import com.restApi.restApiSpringBootApp.dto.user.UserRequestDto;
-import com.restApi.restApiSpringBootApp.entity.User;
-import com.restApi.restApiSpringBootApp.repository.UserJpaRepo;
+import com.restApi.restApiSpringBootApp.domain.user.User;
+import com.restApi.restApiSpringBootApp.domain.user.UserJpaRepo;
+import com.restApi.restApiSpringBootApp.dto.user.UserResponseDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,51 +19,38 @@ public class UserService {
 
     @Transactional
     public Long save(UserRequestDto userDto) {
-        userJpaRepo.save(userDto.toEntity());
-        return userJpaRepo.findByEmail(userDto.getEmail()).getUserId();
+        User saved = userJpaRepo.save(userDto.toEntity());
+        return saved.getUserId();
     }
 
     @Transactional(readOnly = true)
-    public UserRequestDto findById(Long id) {
+    public UserResponseDto findById(Long id) {
         User user = userJpaRepo.findById(id)
                 .orElseThrow(UserNotFoundCException::new);
-        return UserRequestDto.builder()
-                .name(user.getName())
-                .email(user.getEmail())
-                .build();
+        return new UserResponseDto(user);
     }
 
     @Transactional(readOnly = true)
-    public UserRequestDto findByEmail(String email) {
-        User user = userJpaRepo.findByEmail(email);
-        if (user == null) throw new UserNotFoundCException();
-        else return UserRequestDto
-                .builder()
-                .name(user.getName())
-                .email(user.getName())
-                .build();
+    public UserResponseDto findByEmail(String email) {
+        User user = userJpaRepo.findByEmail(email)
+                .orElseThrow(UserNotFoundCException::new);
+        return new UserResponseDto(user);
     }
 
     @Transactional(readOnly = true)
-    public List<UserRequestDto> findAllUser() {
+    public List<UserResponseDto> findAllUser() {
         return userJpaRepo.findAll()
                 .stream()
-                .map(u -> UserRequestDto.builder()
-                        .name(u.getName())
-                        .email(u.getEmail())
-                        .build())
+                .map(UserResponseDto::new)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public UserRequestDto modify(Long id, String name) {
+    public Long update(Long id, UserRequestDto userRequestDto) {
         User modifiedUser = userJpaRepo
                 .findById(id).orElseThrow(UserNotFoundCException::new);
-        modifiedUser.setName(name);
-        return UserRequestDto.builder()
-                .name(modifiedUser.getName())
-                .email(modifiedUser.getEmail())
-                .build();
+        modifiedUser.updateNickName(userRequestDto.getNickName());
+        return id;
     }
 
     @Transactional

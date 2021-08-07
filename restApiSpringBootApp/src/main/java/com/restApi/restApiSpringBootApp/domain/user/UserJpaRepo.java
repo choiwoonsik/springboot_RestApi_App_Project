@@ -1,13 +1,14 @@
-package com.restApi.restApiSpringBootApp.repository;
+package com.restApi.restApiSpringBootApp.domain.user;
 
-import com.restApi.restApiSpringBootApp.entity.User;
+import com.restApi.restApiSpringBootApp.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserJpaRepo extends JpaRepository<User, Long> {
 
     List<User> findByName(String name);
 
-    User findByEmail(String email);
+    Optional<User> findByEmail(String email);
 }
