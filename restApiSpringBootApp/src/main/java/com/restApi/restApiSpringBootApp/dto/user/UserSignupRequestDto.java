@@ -1,20 +1,22 @@
 package com.restApi.restApiSpringBootApp.dto.user;
 
 import com.restApi.restApiSpringBootApp.domain.user.User;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+
+import java.util.Collections;
 
 @Getter
-@Setter
-@NoArgsConstructor
-public class UserRequestDto {
-
+public class UserSignupRequestDto {
     private String email;
+    private String encodedPassword;
     private String name;
     private String nickName;
 
     @Builder
-    public UserRequestDto(String email, String name, String nickName) {
+    public UserSignupRequestDto(String email, String password, String name, String nickName) {
         this.email = email;
+        this.encodedPassword = password;
         this.name = name;
         this.nickName = nickName;
     }
@@ -22,8 +24,10 @@ public class UserRequestDto {
     public User toEntity() {
         return User.builder()
                 .email(email)
-                .name(name)
+                .password(encodedPassword)
                 .nickName(nickName)
+                .name(name)
+                .roles(Collections.singletonList("ROLE_USER"))
                 .build();
     }
 }

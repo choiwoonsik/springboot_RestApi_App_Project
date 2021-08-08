@@ -5,3 +5,9 @@ unKnown:
 userNotFound:
   code: "-1000"
   msg: "존재하지 않는 회원입니다."
+emailLoginFailed:
+  code: "-1001"
+  msg: "가입하지 않은 아이디이거나, 잘못된 비밀번호입니다."
+emailSignupFailed:
+  code: "-1002"
+  msg: "이미 가입된 이메일입니다."

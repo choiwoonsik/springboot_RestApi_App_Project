@@ -39,7 +39,6 @@ class UserServiceTest {
         UserRequestDto userA = UserRequestDto.builder()
                 .name("최운식")
                 .email("운식@이메일.com")
-                .role(Role.USER)
                 .build();
         Long saveId = userService.save(userA);
 
@@ -61,7 +60,6 @@ class UserServiceTest {
         UserRequestDto userA = UserRequestDto.builder()
                 .name("운식")
                 .email("email")
-                .role(Role.USER)
                 .build();
         Long id = userService.save(userA);
 
@@ -80,13 +78,11 @@ class UserServiceTest {
         UserRequestDto userA = UserRequestDto.builder()
                 .name("운식")
                 .email("email")
-                .role(Role.USER)
                 .build();
         userService.save(userA);
         UserRequestDto userB = UserRequestDto.builder()
                 .name("운식2")
                 .email("email2")
-                .role(Role.USER)
                 .build();
         userService.save(userB);
 
@@ -105,7 +101,6 @@ class UserServiceTest {
                 .name("userA")
                 .email("user@userA.com")
                 .nickName("aaa")
-                .role(Role.USER)
                 .build();
         Long id = userService.save(originUser);
 
@@ -128,7 +123,6 @@ class UserServiceTest {
         UserRequestDto userA = UserRequestDto.builder()
                 .name("woonsik")
                 .email("email")
-                .role(Role.USER)
                 .build();
         Long saveId = userService.save(userA);
 
@@ -149,7 +143,6 @@ class UserServiceTest {
         userJpaRepo.save(User.builder()
                 .name("운식")
                 .email("운식@이메일.com")
-                .role(Role.USER)
                 .build());
 
         //when
