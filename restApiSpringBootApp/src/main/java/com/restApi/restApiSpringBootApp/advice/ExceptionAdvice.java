@@ -61,6 +61,7 @@ public class ExceptionAdvice {
     /***
      * 회원 가입 시 이미 로그인 된 이메일인 경우 발생 시키는 예외
      */
+    @ExceptionHandler(EmailSignupFailedCException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected CommonResult emailSignupFailedException(HttpServletRequest request, EmailSignupFailedCException e) {
         return responseService.getFailResult(
