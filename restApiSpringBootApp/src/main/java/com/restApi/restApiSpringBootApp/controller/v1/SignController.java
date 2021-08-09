@@ -1,10 +1,8 @@
 package com.restApi.restApiSpringBootApp.controller.v1;
 
 import com.restApi.restApiSpringBootApp.config.security.JwtProvider;
-import com.restApi.restApiSpringBootApp.domain.user.UserJpaRepo;
 import com.restApi.restApiSpringBootApp.dto.user.UserLoginResponseDto;
 import com.restApi.restApiSpringBootApp.dto.user.UserSignupRequestDto;
-import com.restApi.restApiSpringBootApp.model.response.CommonResult;
 import com.restApi.restApiSpringBootApp.model.response.SingleResult;
 import com.restApi.restApiSpringBootApp.service.ResponseService;
 import com.restApi.restApiSpringBootApp.service.UserService;
@@ -15,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-@Api(tags = "1. SignUp / LogIn")
+@Api(tags = {"1. SignUp/LogIn"})
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/v1")

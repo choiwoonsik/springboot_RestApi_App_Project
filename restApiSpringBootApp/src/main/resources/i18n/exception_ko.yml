@@ -11,3 +11,9 @@ emailLoginFailed:
 emailSignupFailed:
   code: "-1002"
   msg: "이미 가입된 이메일입니다."
+authenticationEntrypoint:
+  code: "-1003"
+  msg: "해당 리소스에 접근하기 위한 권한이 없습니다."
+accessDenied:
+  code: "-1004"
+  msg: "해당 리소스에 접근할 수 없는 권한입니다."

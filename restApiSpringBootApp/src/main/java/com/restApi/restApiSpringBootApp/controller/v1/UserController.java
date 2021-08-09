@@ -9,8 +9,12 @@ import com.restApi.restApiSpringBootApp.service.ResponseService;
 import com.restApi.restApiSpringBootApp.service.UserService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+//@PreAuthorize("hasRole('ROLE_USER') and hasAnyRole('ROLE_IORN', 'ROLE_SILVER', 'ROLE_GOLD', 'ROLE_BRONZE')")
 @Api(tags = {"2. User"})
 @RequiredArgsConstructor
 @RestController
@@ -20,6 +24,7 @@ public class UserController {
     private final UserService userService;
     private final ResponseService responseService;
 
+    //@PreAuthorize("hasRole('ROLE_PLATINUM') and hasRole('ROLE_GOLD')")
     @ApiImplicitParams({
             @ApiImplicitParam(
                     name = "X-AUTH-TOKEN",

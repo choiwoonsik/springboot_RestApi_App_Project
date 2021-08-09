@@ -1,6 +1,6 @@
-package com.restApi.restApiSpringBootApp.config.security;
+package com.restApi.restApiSpringBootApp.service.security;
 
-import com.restApi.restApiSpringBootApp.advice.exception.UserNotFoundCException;
+import com.restApi.restApiSpringBootApp.advice.exception.CUserNotFoundException;
 import com.restApi.restApiSpringBootApp.domain.user.UserJpaRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +16,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String userPk) throws UsernameNotFoundException {
-        return userJpaRepo.findById(Long.parseLong(userPk)).orElseThrow(UserNotFoundCException::new);
+        return userJpaRepo.findById(Long.parseLong(userPk)).orElseThrow(CUserNotFoundException::new);
     }
 }

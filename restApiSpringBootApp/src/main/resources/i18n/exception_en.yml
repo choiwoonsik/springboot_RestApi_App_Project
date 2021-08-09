@@ -11,3 +11,9 @@ emailLoginFailed:
 emailSignupFailed:
   code: "-1002"
   msg: "This email is already subscribed."
+authenticationEntrypoint:
+  code: "-1003"
+  msg: "You do not have permission to access that resource."
+accessDenied:
+  code: "-1004"
+  msg: "Permission not accessible to this resource."

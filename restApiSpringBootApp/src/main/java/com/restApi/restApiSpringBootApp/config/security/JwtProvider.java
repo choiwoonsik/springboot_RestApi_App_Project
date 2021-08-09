@@ -29,7 +29,7 @@ public class JwtProvider {
 
     private Long tokenValidMillisecond = 60 * 60 * 1000L;
 
-    private final CustomUserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
     @PostConstruct
     protected void init() {

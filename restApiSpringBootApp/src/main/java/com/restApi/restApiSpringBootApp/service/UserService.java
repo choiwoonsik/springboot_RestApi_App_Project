@@ -1,8 +1,8 @@
 package com.restApi.restApiSpringBootApp.service;
 
-import com.restApi.restApiSpringBootApp.advice.exception.EmailLoginFailedCException;
-import com.restApi.restApiSpringBootApp.advice.exception.EmailSignupFailedCException;
-import com.restApi.restApiSpringBootApp.advice.exception.UserNotFoundCException;
+import com.restApi.restApiSpringBootApp.advice.exception.CEmailLoginFailedException;
+import com.restApi.restApiSpringBootApp.advice.exception.CEmailSignupFailedException;
+import com.restApi.restApiSpringBootApp.advice.exception.CUserNotFoundException;
 import com.restApi.restApiSpringBootApp.dto.user.UserLoginResponseDto;
 import com.restApi.restApiSpringBootApp.dto.user.UserRequestDto;
 import com.restApi.restApiSpringBootApp.domain.user.User;
@@ -34,14 +34,14 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponseDto findById(Long id) {
         User user = userJpaRepo.findById(id)
-                .orElseThrow(UserNotFoundCException::new);
+                .orElseThrow(CUserNotFoundException::new);
         return new UserResponseDto(user);
     }
 
     @Transactional(readOnly = true)
     public UserResponseDto findByEmail(String email) {
         User user = userJpaRepo.findByEmail(email)
-                .orElseThrow(UserNotFoundCException::new);
+                .orElseThrow(CUserNotFoundException::new);
         return new UserResponseDto(user);
     }
 
@@ -56,7 +56,7 @@ public class UserService {
     @Transactional
     public Long update(Long id, UserRequestDto userRequestDto) {
         User modifiedUser = userJpaRepo
-                .findById(id).orElseThrow(UserNotFoundCException::new);
+                .findById(id).orElseThrow(CUserNotFoundException::new);
         modifiedUser.updateNickName(userRequestDto.getNickName());
         return id;
     }
@@ -68,9 +68,9 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserLoginResponseDto login(String email, String password) {
-        User user = userJpaRepo.findByEmail(email).orElseThrow(EmailLoginFailedCException::new);
+        User user = userJpaRepo.findByEmail(email).orElseThrow(CEmailLoginFailedException::new);
         if (!passwordEncoder.matches(password, user.getPassword()))
-            throw new EmailLoginFailedCException();
+            throw new CEmailLoginFailedException();
         return new UserLoginResponseDto(user);
     }
 
@@ -78,6 +78,6 @@ public class UserService {
     public Long signup(UserSignupRequestDto userSignupDto) {
         User user = userJpaRepo.findByEmail(userSignupDto.getEmail()).orElse(null);
         if (user == null) return userJpaRepo.save(userSignupDto.toEntity()).getUserId();
-        else throw new EmailSignupFailedCException();
+        else throw new CEmailSignupFailedException();
     }
 }

@@ -1,6 +1,6 @@
 package com.restApi.restApiSpringBootApp.service;
 
-import com.restApi.restApiSpringBootApp.advice.exception.UserNotFoundCException;
+import com.restApi.restApiSpringBootApp.advice.exception.CUserNotFoundException;
 import com.restApi.restApiSpringBootApp.domain.user.User;
 import com.restApi.restApiSpringBootApp.dto.user.UserRequestDto;
 import com.restApi.restApiSpringBootApp.domain.user.UserJpaRepo;
@@ -130,7 +130,7 @@ class UserServiceTest {
 
         // then
         org.junit.jupiter.api.Assertions.
-                assertThrows(UserNotFoundCException.class, () -> userService.findById(saveId));
+                assertThrows(CUserNotFoundException.class, () -> userService.findById(saveId));
     }
 
     @Test
