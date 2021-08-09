@@ -1,6 +1,5 @@
 package com.restApi.restApiSpringBootApp.controller.v1;
 
-import com.restApi.restApiSpringBootApp.domain.user.Role;
 import com.restApi.restApiSpringBootApp.dto.user.UserRequestDto;
 import com.restApi.restApiSpringBootApp.dto.user.UserResponseDto;
 import com.restApi.restApiSpringBootApp.model.response.CommonResult;

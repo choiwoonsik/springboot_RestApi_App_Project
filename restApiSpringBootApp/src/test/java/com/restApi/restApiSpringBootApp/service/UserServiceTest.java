@@ -1,7 +1,6 @@
 package com.restApi.restApiSpringBootApp.service;
 
 import com.restApi.restApiSpringBootApp.advice.exception.UserNotFoundCException;
-import com.restApi.restApiSpringBootApp.domain.user.Role;
 import com.restApi.restApiSpringBootApp.domain.user.User;
 import com.restApi.restApiSpringBootApp.dto.user.UserRequestDto;
 import com.restApi.restApiSpringBootApp.domain.user.UserJpaRepo;
