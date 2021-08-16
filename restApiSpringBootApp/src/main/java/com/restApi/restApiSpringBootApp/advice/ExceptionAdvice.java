@@ -1,11 +1,9 @@
 package com.restApi.restApiSpringBootApp.advice;
 
-import com.restApi.restApiSpringBootApp.advice.exception.CAuthenticationEntryPointException;
-import com.restApi.restApiSpringBootApp.advice.exception.CEmailLoginFailedException;
-import com.restApi.restApiSpringBootApp.advice.exception.CEmailSignupFailedException;
-import com.restApi.restApiSpringBootApp.advice.exception.CUserNotFoundException;
+import com.restApi.restApiSpringBootApp.advice.exception.*;
 import com.restApi.restApiSpringBootApp.model.response.CommonResult;
 import com.restApi.restApiSpringBootApp.service.ResponseService;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
@@ -17,6 +15,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -89,6 +90,29 @@ public class ExceptionAdvice {
     protected CommonResult accessDeniedException(HttpServletRequest request, AccessDeniedException e) {
         return responseService.getFailResult(
                 Integer.parseInt(getMessage("accessDenied.code")), getMessage("accessDenied.msg")
+        );
+    }
+
+    /**
+     * refresh token 에러시 발생 시키는 에러
+     */
+    @ExceptionHandler(CRefreshTokenException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected CommonResult refreshTokenException(HttpServletRequest request, CRefreshTokenException e) {
+        return responseService.getFailResult(
+                Integer.parseInt(getMessage("refreshTokenInValid.code")), getMessage("refreshTokenInValid.msg")
+        );
+    }
+
+    /**
+     * 액세스 토큰 만료시 발생하는 에러
+     */
+    @ExceptionHandler(CExpiredAccessTokenException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected CommonResult expiredAccessTokenException(HttpServletRequest request, CExpiredAccessTokenException e) {
+        System.out.println("ExceptionAdvice.expiredAccessTokenException");
+        return responseService.getFailResult(
+                Integer.parseInt(getMessage("expiredAccessToken.code")), getMessage("expiredAccessToken.msg")
         );
     }
 

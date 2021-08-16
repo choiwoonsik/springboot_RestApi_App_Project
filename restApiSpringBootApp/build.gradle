@@ -32,6 +32,8 @@ dependencies {
 
 	// spring security 의존성
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	// jwt 의존성
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 
 	// junit4 Test 의존성
@@ -41,7 +43,10 @@ dependencies {
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	// 스프링 테스트
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
 
 	//JUnit4 추가
 	testImplementation("org.junit.vintage:junit-vintage-engine") {

@@ -17,3 +17,9 @@ authenticationEntrypoint:
 accessDenied:
   code: "-1004"
   msg: "Permission not accessible to this resource."
+refreshTokenInValid:
+  code: "-1005"
+  msg: "Refresh Token is Wrong."
+expiredAccessToken:
+  code: "-1006"
+  msg: "AccessToken is Expired"

@@ -5,155 +5,144 @@ import com.restApi.restApiSpringBootApp.domain.user.User;
 import com.restApi.restApiSpringBootApp.dto.user.UserRequestDto;
 import com.restApi.restApiSpringBootApp.domain.user.UserJpaRepo;
 import com.restApi.restApiSpringBootApp.dto.user.UserResponseDto;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.restApi.restApiSpringBootApp.dto.user.UserSignupRequestDto;
+import com.restApi.restApiSpringBootApp.service.security.SignService;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+@RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
-class UserServiceTest {
-
-    EntityManager em;
-    UserService userService;
-    UserJpaRepo userJpaRepo;
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+public class UserServiceTest {
 
     @Autowired
-    public UserServiceTest(EntityManager em, UserService userService, UserJpaRepo userJpaRepo) {
-        this.em = em;
-        this.userService = userService;
-        this.userJpaRepo = userJpaRepo;
+    UserService userService;
+    @Autowired
+    UserJpaRepo userJpaRepo;
+    @Autowired
+    SignService signService;
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    private UserSignupRequestDto getUserSignupRequestDto(int number) {
+        return UserSignupRequestDto.builder()
+                .name("name" + number)
+                .password("password" + number)
+                .email("email" + number)
+                .nickName("nickName" + number)
+                .build();
     }
 
     @Test
-    @DisplayName("등록 테스트")
-    void 등록() {
+    public void 등록() {
         // given
-        UserRequestDto userA = UserRequestDto.builder()
-                .name("최운식")
-                .email("운식@이메일.com")
-                .build();
-        Long saveId = userService.save(userA);
+        UserSignupRequestDto userA =
+                getUserSignupRequestDto(1);
+        User savedUser = userJpaRepo.save(userA.toEntity(passwordEncoder));
 
         // when
-        UserResponseDto userB = userService.findById(saveId);
+        UserResponseDto userB = userService.findById(savedUser.getUserId());
+        User byId = userJpaRepo.findById(savedUser.getUserId()).orElseThrow(CUserNotFoundException::new);
 
         // then
-        Assertions.assertThat(userA.getName()).isEqualTo(userB.getName());
-        Assertions.assertThat(userA.getEmail()).isEqualTo(userB.getEmail());
-        Assertions.assertThat(
-                        userService.findById(saveId).getEmail())
-                .isEqualTo(userJpaRepo.findById(saveId).get().getEmail());
+        assertThat(userA.getName()).isEqualTo(userB.getName());
+        assertThat(userA.getEmail()).isEqualTo(userB.getEmail());
+        assertThat(
+                userService.findById(savedUser.getUserId()).getEmail())
+                .isEqualTo(byId.getEmail());
     }
 
     @Test
-    @DisplayName("저장 후 이름, 이메일 확인")
-    void 저장후_이메일_이름비교() {
+    public void 저장후_이메일_이름비교() {
         // given
-        UserRequestDto userA = UserRequestDto.builder()
-                .name("운식")
-                .email("email")
-                .build();
-        Long id = userService.save(userA);
+        UserSignupRequestDto userA =
+                getUserSignupRequestDto(1);
+        User user = userJpaRepo.save(userA.toEntity(passwordEncoder));
 
         // when
-        UserResponseDto dtoA = userService.findById(id);
+        UserResponseDto dtoA = userService.findById(user.getUserId());
 
         // then
-        Assertions.assertThat(userA.getEmail()).isEqualTo(dtoA.getEmail());
-        Assertions.assertThat(userA.getName()).isEqualTo(dtoA.getName());
+        assertThat(userA.getEmail()).isEqualTo(dtoA.getEmail());
+        assertThat(userA.getName()).isEqualTo(dtoA.getName());
     }
 
     @Test
-    @DisplayName("모든 회원 조회")
-    void 모든_회원_조회() {
+    public void 모든_회원_조회() {
         // given
-        UserRequestDto userA = UserRequestDto.builder()
-                .name("운식")
-                .email("email")
-                .build();
-        userService.save(userA);
-        UserRequestDto userB = UserRequestDto.builder()
-                .name("운식2")
-                .email("email2")
-                .build();
-        userService.save(userB);
+        UserSignupRequestDto userA =
+                getUserSignupRequestDto(1);
+        UserSignupRequestDto userB =
+                getUserSignupRequestDto(2);
 
         // when
+        userJpaRepo.save(userA.toEntity(passwordEncoder));
+        userJpaRepo.save(userB.toEntity(passwordEncoder));
+
+        // then
         List<UserResponseDto> allUser = userService.findAllUser();
-
-        // then
-        Assertions.assertThat(allUser.size()).isSameAs(2);
+        assertThat(allUser.size()).isSameAs(2);
     }
 
     @Test
-    @DisplayName("회원 수정 - nickName")
-    void 회원수정_닉네임() {
+    public void 회원수정_닉네임() {
         // given
-        UserRequestDto originUser = UserRequestDto.builder()
-                .name("userA")
-                .email("user@userA.com")
-                .nickName("aaa")
-                .build();
-        Long id = userService.save(originUser);
-
+        UserSignupRequestDto userA =
+                getUserSignupRequestDto(1);
+        User user = userJpaRepo.save(userA.toEntity(passwordEncoder));
 
         // when
         UserRequestDto updateUser = UserRequestDto.builder()
                 .nickName("bbb")
                 .build();
-        userService.update(id, updateUser);
+        userService.update(user.getUserId(), updateUser);
 
         // then
-        Assertions.assertThat(userService.findById(id).getNickName()).isEqualTo("bbb");
-        System.out.println(userService.findById(id).getNickName());
+        assertThat(userService.findById(user.getUserId()).getNickName()).isEqualTo("bbb");
     }
 
     @Test
-    @DisplayName("회원 삭제")
-    void 삭제() {
+    public void 삭제() {
         // given
-        UserRequestDto userA = UserRequestDto.builder()
-                .name("woonsik")
-                .email("email")
-                .build();
-        Long saveId = userService.save(userA);
+        UserSignupRequestDto userA =
+                getUserSignupRequestDto(1);
+        User user = userJpaRepo.save(userA.toEntity(passwordEncoder));
 
         // when
-        userService.delete(saveId);
+        userService.delete(user.getUserId());
 
         // then
-        org.junit.jupiter.api.Assertions.
-                assertThrows(CUserNotFoundException.class, () -> userService.findById(saveId));
+        assertThrows(CUserNotFoundException.class, () -> userService.findById(user.getUserId()));
     }
 
     @Test
-    public void BaseTimeEntity_등록() throws Exception
-    {
+    public void BaseTimeEntity_등록() throws Exception {
         //given
         LocalDateTime now = LocalDateTime
                 .of(2021, 8, 5, 22, 31, 0);
-        userJpaRepo.save(User.builder()
-                .name("운식")
-                .email("운식@이메일.com")
-                .build());
+        UserSignupRequestDto userA =
+                getUserSignupRequestDto(1);
 
         //when
+        userJpaRepo.save(userA.toEntity(passwordEncoder));
         List<User> users = userJpaRepo.findAll();
 
         //then
-        User user = users.get(0);
-
-        System.out.println(">>>>>>> createDate = " + user.getCreatedDate()
-                + ", modifiedDate = " + user.getModifiedDate());
-
-        Assertions.assertThat(user.getCreatedDate()).isAfter(now);
-        Assertions.assertThat(user.getModifiedDate()).isAfter(now);
+        User firstUser = users.get(0);
+        assertThat(firstUser.getCreatedDate()).isAfter(now);
+        assertThat(firstUser.getModifiedDate()).isAfter(now);
     }
 }

@@ -17,3 +17,9 @@ authenticationEntrypoint:
 accessDenied:
   code: "-1004"
   msg: "해당 리소스에 접근할 수 없는 권한입니다."
+refreshTokenInValid:
+  code: "-1005"
+  msg: "리프레쉬 토큰이 잘못되었습니다."
+expiredAccessToken:
+  code: "-1006"
+  msg: "액세스 토큰이 만료되었습니다."
