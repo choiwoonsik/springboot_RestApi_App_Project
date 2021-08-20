@@ -1,5 +1,6 @@
 package com.restApi.restApiSpringBootApp.controller.exception;
 
+import com.restApi.restApiSpringBootApp.advice.exception.CAccessDeniedException;
 import com.restApi.restApiSpringBootApp.advice.exception.CAuthenticationEntryPointException;
 import com.restApi.restApiSpringBootApp.model.response.CommonResult;
 import io.swagger.annotations.Api;
@@ -22,6 +23,6 @@ public class ExceptionController {
 
     @GetMapping("/accessDenied")
     public CommonResult accessDeniedException() {
-        throw new AccessDeniedException("");
+        throw new CAccessDeniedException();
     }
 }

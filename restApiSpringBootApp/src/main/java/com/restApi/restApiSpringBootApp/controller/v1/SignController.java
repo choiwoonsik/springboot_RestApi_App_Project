@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = {"1. SignUp/LogIn"})
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/v1/sign")
+@RequestMapping("/v1")
 public class SignController {
 
     private final SignService SignService;

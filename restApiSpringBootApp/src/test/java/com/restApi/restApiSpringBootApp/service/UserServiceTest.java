@@ -47,7 +47,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void 등록() {
+    public void 회원등록() {
         // given
         UserSignupRequestDto userA =
                 getUserSignupRequestDto(1);
@@ -66,7 +66,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void 저장후_이메일_이름비교() {
+    public void 회원등록_이메일검증() {
         // given
         UserSignupRequestDto userA =
                 getUserSignupRequestDto(1);
@@ -81,7 +81,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void 모든_회원_조회() {
+    public void 전체_회원조회() {
         // given
         UserSignupRequestDto userA =
                 getUserSignupRequestDto(1);
@@ -115,7 +115,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void 삭제() {
+    public void 회원삭제() {
         // given
         UserSignupRequestDto userA =
                 getUserSignupRequestDto(1);

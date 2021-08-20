@@ -85,9 +85,9 @@ public class ExceptionAdvice {
     /**
      * 권한이 없는 리소스를 요청한 경우 발생 시키는 예외
      */
-    @ExceptionHandler(AccessDeniedException.class)
+    @ExceptionHandler(CAccessDeniedException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    protected CommonResult accessDeniedException(HttpServletRequest request, AccessDeniedException e) {
+    protected CommonResult accessDeniedException(HttpServletRequest request, CAccessDeniedException e) {
         return responseService.getFailResult(
                 Integer.parseInt(getMessage("accessDenied.code")), getMessage("accessDenied.msg")
         );

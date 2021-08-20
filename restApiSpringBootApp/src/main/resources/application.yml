@@ -16,7 +16,7 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     properties:
       hibernate:
-        hbm2ddl.auto: create
+        hbm2ddl.auto: create-drop
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
         show-sql: true
     open-in-view: false
