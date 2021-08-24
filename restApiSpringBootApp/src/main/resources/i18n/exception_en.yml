@@ -23,3 +23,12 @@ refreshTokenInValid:
 expiredAccessToken:
   code: "-1006"
   msg: "AccessToken is Expired"
+communicationException:
+  code: "-1007"
+  msg: "An error occurred during communication."
+userExistException:
+  code: "-1008"
+  msg: "Already signed account, please login."
+agreementException:
+  code: "-1009"
+  msg: "A consent is required for the required consent item."

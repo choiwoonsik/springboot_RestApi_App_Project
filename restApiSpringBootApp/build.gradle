@@ -39,6 +39,9 @@ dependencies {
 	// junit4 Test 의존성
 	implementation 'junit:junit:4.13.1'
 
+	// Json을 결과로 매핑하기 위한 의존성
+	implementation 'com.google.code.gson:gson'
+
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'mysql:mysql-connector-java'

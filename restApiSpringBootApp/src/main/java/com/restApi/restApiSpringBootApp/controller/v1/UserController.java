@@ -5,13 +5,10 @@ import com.restApi.restApiSpringBootApp.dto.user.UserResponseDto;
 import com.restApi.restApiSpringBootApp.model.response.CommonResult;
 import com.restApi.restApiSpringBootApp.model.response.ListResult;
 import com.restApi.restApiSpringBootApp.model.response.SingleResult;
-import com.restApi.restApiSpringBootApp.service.ResponseService;
-import com.restApi.restApiSpringBootApp.service.UserService;
+import com.restApi.restApiSpringBootApp.service.response.ResponseService;
+import com.restApi.restApiSpringBootApp.service.user.UserService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 //@PreAuthorize("hasRole('ROLE_USER') and hasAnyRole('ROLE_IORN', 'ROLE_SILVER', 'ROLE_GOLD', 'ROLE_BRONZE')")

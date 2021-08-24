@@ -16,7 +16,7 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     properties:
       hibernate:
-        hbm2ddl.auto: create-drop
+        hbm2ddl.auto: create
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
         show-sql: true
     open-in-view: false
@@ -25,4 +25,4 @@ spring:
     basename: i18n/exception
     encoding: UTF-8
   profiles:
-    include: jwt
+    include: private

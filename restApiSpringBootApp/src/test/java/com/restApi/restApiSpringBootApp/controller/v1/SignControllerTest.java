@@ -3,8 +3,8 @@ package com.restApi.restApiSpringBootApp.controller.v1;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.restApi.restApiSpringBootApp.domain.user.User;
 import com.restApi.restApiSpringBootApp.domain.user.UserJpaRepo;
-import com.restApi.restApiSpringBootApp.dto.user.UserLoginRequestDto;
-import com.restApi.restApiSpringBootApp.dto.user.UserSignupRequestDto;
+import com.restApi.restApiSpringBootApp.dto.sign.UserLoginRequestDto;
+import com.restApi.restApiSpringBootApp.dto.sign.UserSignupRequestDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +17,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;

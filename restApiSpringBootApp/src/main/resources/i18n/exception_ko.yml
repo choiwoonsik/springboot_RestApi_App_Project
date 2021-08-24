@@ -23,3 +23,12 @@ refreshTokenInValid:
 expiredAccessToken:
   code: "-1006"
   msg: "액세스 토큰이 만료되었습니다."
+communicationException:
+  code: "-1007"
+  msg: "통신 중 오류가 발생했습니다."
+userExistException:
+  code: "-1008"
+  msg: "이미 가입된 계정입니다. 로그인을 해주세요"
+agreementException:
+  code: "-1009"
+  msg: "필수동의 항목에 대해 동의가 필요합니다."

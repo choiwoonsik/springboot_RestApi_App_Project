@@ -1,4 +1,4 @@
-package com.restApi.restApiSpringBootApp.service;
+package com.restApi.restApiSpringBootApp.service.response;
 
 import com.restApi.restApiSpringBootApp.model.response.CommonResult;
 import com.restApi.restApiSpringBootApp.model.response.ListResult;

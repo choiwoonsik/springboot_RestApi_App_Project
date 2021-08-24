@@ -1,4 +1,4 @@
-package com.restApi.restApiSpringBootApp.service;
+package com.restApi.restApiSpringBootApp.service.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

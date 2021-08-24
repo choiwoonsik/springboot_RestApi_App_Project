@@ -1,9 +1,6 @@
 package com.restApi.restApiSpringBootApp.service.security;
 
-import com.restApi.restApiSpringBootApp.advice.exception.CEmailLoginFailedException;
-import com.restApi.restApiSpringBootApp.advice.exception.CEmailSignupFailedException;
-import com.restApi.restApiSpringBootApp.advice.exception.CRefreshTokenException;
-import com.restApi.restApiSpringBootApp.advice.exception.CUserNotFoundException;
+import com.restApi.restApiSpringBootApp.advice.exception.*;
 import com.restApi.restApiSpringBootApp.config.security.JwtProvider;
 import com.restApi.restApiSpringBootApp.domain.security.RefreshToken;
 import com.restApi.restApiSpringBootApp.domain.security.RefreshTokenJpaRepo;
@@ -11,8 +8,8 @@ import com.restApi.restApiSpringBootApp.domain.user.User;
 import com.restApi.restApiSpringBootApp.domain.user.UserJpaRepo;
 import com.restApi.restApiSpringBootApp.dto.jwt.TokenDto;
 import com.restApi.restApiSpringBootApp.dto.jwt.TokenRequestDto;
-import com.restApi.restApiSpringBootApp.dto.user.UserLoginRequestDto;
-import com.restApi.restApiSpringBootApp.dto.user.UserSignupRequestDto;
+import com.restApi.restApiSpringBootApp.dto.sign.UserLoginRequestDto;
+import com.restApi.restApiSpringBootApp.dto.sign.UserSignupRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -57,6 +54,15 @@ public class SignService {
         if (userJpaRepo.findByEmail(userSignupDto.getEmail()).isPresent())
             throw new CEmailSignupFailedException();
         return userJpaRepo.save(userSignupDto.toEntity(passwordEncoder)).getUserId();
+    }
+
+    @Transactional
+    public Long socialSignup(UserSignupRequestDto userSignupRequestDto) {
+        if (userJpaRepo
+                .findByEmailAndProvider(userSignupRequestDto.getEmail(), userSignupRequestDto.getProvider())
+                .isPresent()
+        ) throw new CUserExistException();
+        return userJpaRepo.save(userSignupRequestDto.toEntity()).getUserId();
     }
 
     @Transactional

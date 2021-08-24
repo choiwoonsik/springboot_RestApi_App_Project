@@ -2,7 +2,7 @@ package com.restApi.restApiSpringBootApp.controller.v1;
 
 import com.restApi.restApiSpringBootApp.domain.user.User;
 import com.restApi.restApiSpringBootApp.domain.user.UserJpaRepo;
-import com.restApi.restApiSpringBootApp.service.UserService;
+import com.restApi.restApiSpringBootApp.service.user.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
