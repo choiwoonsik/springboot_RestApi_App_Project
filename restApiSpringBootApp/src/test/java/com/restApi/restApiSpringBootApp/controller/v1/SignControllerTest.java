@@ -5,6 +5,8 @@ import com.restApi.restApiSpringBootApp.domain.user.User;
 import com.restApi.restApiSpringBootApp.domain.user.UserJpaRepo;
 import com.restApi.restApiSpringBootApp.dto.sign.UserLoginRequestDto;
 import com.restApi.restApiSpringBootApp.dto.sign.UserSignupRequestDto;
+import com.restApi.restApiSpringBootApp.dto.sign.UserSocialLoginRequestDto;
+import com.restApi.restApiSpringBootApp.dto.sign.UserSocialSignupRequestDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +20,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -45,6 +49,8 @@ public class SignControllerTest {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    private static final String accessToken = "cLDCR4xs1TYyrJAIzQ9bzvXuzML37QiimPVuEwo9dVoAAAF7dvoLNw";
 
     @Before
     public void setUp() {
@@ -75,6 +81,27 @@ public class SignControllerTest {
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.code").value(0))
                 .andExpect(jsonPath("$.msg").exists());
+    }
+
+    @Test
+    public void 로그인_실패() throws Exception {
+        //given
+        String object = objectMapper.writeValueAsString(UserLoginRequestDto.builder()
+                .email("email@email.com")
+                .password("wrongPassword")
+                .build());
+        //when
+        ResultActions actions = mockMvc.perform(
+                post("/v1/login")
+                        .content(object)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON));
+        //then
+        actions
+                .andDo(print())
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.code").value(-1001));
     }
 
     @Test
@@ -116,9 +143,9 @@ public class SignControllerTest {
         //when
         ResultActions actions = mockMvc.perform(
                 post("/v1/signup")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(object));
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(object));
 
         //then
         actions.andDo(print())
@@ -128,24 +155,156 @@ public class SignControllerTest {
     }
 
     @Test
-    public void 로그인_실패() throws Exception {
+    public void 카카오_회원가입_성공() throws Exception {
         //given
-        String object = objectMapper.writeValueAsString(UserLoginRequestDto.builder()
-                .email("email@email.com")
-                .password("wrongPassword")
+        String object = objectMapper.writeValueAsString(UserSocialSignupRequestDto.builder()
+                .accessToken(accessToken)
                 .build());
+
         //when
         ResultActions actions = mockMvc.perform(
-                post("/v1/login")
-                .content(object)
+                post("/v1/social/signup/kakao")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(object)
+        );
+
+        //then
+        actions
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.code").value(0));
+    }
+
+    @Test
+    public void 카카오_회원가입_토큰에러_실패() throws Exception
+    {
+        //given
+        String object = objectMapper.writeValueAsString(UserSocialSignupRequestDto.builder()
+                .accessToken(accessToken+"_wrongToken")
+                .build());
+
+        //when
+        ResultActions actions = mockMvc.perform(
+                post("/v1/social/signup/kakao")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON));
+                .accept(MediaType.APPLICATION_JSON)
+                .content(object));
+
+        //then
+        actions.andDo(print())
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.code").value("-1007"));
+    }
+
+    @Test
+    public void 카카오_회원가입_기가입_유저_실패() throws Exception
+    {
+        //given
+        userJpaRepo.save(User.builder()
+                .nickName("woonsik")
+                .name("woonsik")
+                .email("groom@kakao.com")
+                .provider("kakao")
+                .build());
+
+        String object = objectMapper.writeValueAsString(UserSocialSignupRequestDto.builder()
+                .accessToken(accessToken)
+                .build());
+
+        //when
+        ResultActions actions = mockMvc.perform(post("/v1/social/signup/kakao")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(object));
+
         //then
         actions
                 .andDo(print())
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.code").value(-1001));
+                .andExpect(jsonPath("$.code").value("-1008"));
+    }
+
+    @Test
+    public void 카카오_로그인_성공() throws Exception
+    {
+        //given
+        String object = objectMapper.writeValueAsString(UserSocialLoginRequestDto.builder()
+                .accessToken(accessToken)
+                .build());
+
+        //when
+        mockMvc.perform(post("/v1/social/signup/kakao")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(object));
+
+        ResultActions actions = mockMvc.perform(post("/v1/social/login/kakao")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(object));
+
+        //then
+        actions
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.code").value(0));
+    }
+
+    @Test
+    public void 카카오_로그인_액세스토큰오류_실패() throws Exception
+    {
+        //given
+        String signUpObject = objectMapper.writeValueAsString(UserSocialLoginRequestDto.builder()
+                .accessToken(accessToken)
+                .build());
+        String logInObject = objectMapper.writeValueAsString(UserSocialLoginRequestDto.builder()
+                .accessToken(accessToken+"_wrongToken")
+                .build());
+
+        //when
+        mockMvc.perform(post("/v1/social/signup/kakao")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(signUpObject));
+
+        ResultActions actions = mockMvc.perform(post("/v1/social/login/kakao")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(logInObject));
+
+        //then
+        actions
+                .andDo(print())
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.code").value(-1007));
+    }
+
+    @Test
+    public void 카카오_로그인_비가입자_실패() throws Exception
+    {
+        //given
+        String logInObject = objectMapper.writeValueAsString(UserSocialLoginRequestDto.builder()
+                .accessToken(accessToken)
+                .build());
+
+        //when
+        ResultActions actions = mockMvc.perform(post("/v1/social/login/kakao")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(logInObject));
+
+        //then
+        actions
+                .andDo(print())
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.code").value(-1000));
     }
 
     @Test
@@ -155,15 +314,16 @@ public class SignControllerTest {
         mockMvc.perform(get("/v1/users"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/exception/accessDenied"));;
+                .andExpect(redirectedUrl("/exception/accessDenied"));
+        ;
     }
-    
+
     @Test
     @WithMockUser(username = "mockUser", roles = {"GUEST", "USER"})
     public void 접근성공() throws Exception {
         //then
         mockMvc.perform(
-                get("/v1/users"))
+                        get("/v1/users"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }

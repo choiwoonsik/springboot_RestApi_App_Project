@@ -1,4 +1,4 @@
-package com.restApi.restApiSpringBootApp.service;
+package com.restApi.restApiSpringBootApp.service.user;
 
 import com.restApi.restApiSpringBootApp.advice.exception.CUserNotFoundException;
 import com.restApi.restApiSpringBootApp.domain.user.User;

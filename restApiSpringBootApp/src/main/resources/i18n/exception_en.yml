@@ -25,7 +25,7 @@ expiredAccessToken:
   msg: "AccessToken is Expired"
 communicationException:
   code: "-1007"
-  msg: "An error occurred during communication."
+  msg: "An error occurred during the social authentication process."
 userExistException:
   code: "-1008"
   msg: "Already signed account, please login."

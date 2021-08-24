@@ -8,8 +8,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,6 +19,7 @@ import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTest
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
+@Transactional
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 public class UserJpaRepoTest {
 
@@ -28,7 +31,6 @@ public class UserJpaRepoTest {
     private String name = "woonsik";
     private String email = "dnstlr2933@naver.com";
     private String password = "myPassWord";
-
 
     @Test
     public void 회원저장_후_이메일로_회원검색() throws Exception {
@@ -47,8 +49,27 @@ public class UserJpaRepoTest {
 
         //then
         assertNotNull(user);
-        assertEquals(user.getUsername(), user.getUsername());
         assertThat(user.getName()).isEqualTo(name);
         assertThat(user.getNickName()).isEqualTo(name);
+    }
+
+    @Test
+    public void 카카오_가입자_조회() throws Exception
+    {
+        //given
+        userJpaRepo.save(User.builder()
+                .name(name)
+                .email(email)
+                .nickName(name)
+                .provider("kakao")
+                .build());
+        //when
+        Optional<User> kakao = userJpaRepo.findByEmailAndProvider(email, "kakao");
+
+        //then
+        assertThat(kakao).isNotNull();
+        assertThat(kakao.isPresent()).isEqualTo(true);
+        assertThat(kakao.get().getName()).isEqualTo(name);
+        assertThat(kakao.get().getProvider()).isEqualTo("kakao");
     }
 }

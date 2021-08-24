@@ -45,7 +45,6 @@ public class KakaoService {
             ResponseEntity<String> response = restTemplate.postForEntity(requestUrl, request, String.class);
             if (response.getStatusCode() == HttpStatus.OK)
                 return gson.fromJson(response.getBody(), KakaoProfile.class);
-            log.error("header : " + response.getHeaders());
         } catch (Exception e) {
             log.error(e.toString());
             throw new CCommunicationException();
