@@ -48,7 +48,7 @@ public class ExceptionAdvice {
      * 유저 이메일 로그인 실패 시 발생시키는 예외
      */
     @ExceptionHandler(CEmailLoginFailedException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.CONFLICT)
     protected CommonResult emailLoginFailedException(HttpServletRequest request, CEmailLoginFailedException e) {
         return responseService.getFailResult(
                 Integer.parseInt(getMessage("emailLoginFailed.code")), getMessage("emailLoginFailed.msg")
@@ -125,7 +125,7 @@ public class ExceptionAdvice {
      * 기 가입자 에러
      */
     @ExceptionHandler(CUserExistException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.CONFLICT)
     protected CommonResult existUserException(HttpServletRequest request, CUserExistException e) {
         return responseService.getFailResult(
                 Integer.parseInt(getMessage("userExistException.code")), getMessage("userExistException.msg")

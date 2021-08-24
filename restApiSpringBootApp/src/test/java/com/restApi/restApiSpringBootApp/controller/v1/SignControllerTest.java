@@ -122,7 +122,7 @@ public class SignControllerTest {
 
         //then
         actions.andDo(print())
-                .andExpect(status().is5xxServerError())
+                .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.code").value(-1002));
     }
@@ -143,7 +143,7 @@ public class SignControllerTest {
         //then
         actions
                 .andDo(print())
-                .andExpect(status().is5xxServerError())
+                .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.code").value(-1001));
     }
