@@ -23,7 +23,7 @@ public class KakaoService {
     private final RestTemplate restTemplate;
     private final Gson gson;
 
-    @Value("${url.base}")
+    @Value("${spring.url.base}")
     private String baseUrl;
 
     @Value("${social.kakao.client-id}")

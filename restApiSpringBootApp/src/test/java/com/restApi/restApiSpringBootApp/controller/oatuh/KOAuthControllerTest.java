@@ -38,7 +38,7 @@ public class KOAuthControllerTest {
 
     @Before
     public void setUri() {
-        baseUrl = env.getProperty("url.base");
+        baseUrl = env.getProperty("spring.url.base");
         kakaoClientId = env.getProperty("social.kakao.client-id");
         kakaoRedirectUri = env.getProperty("social.kakao.redirect");
     }

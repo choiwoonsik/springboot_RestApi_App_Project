@@ -32,7 +32,7 @@ public class KOAuthController {
     private final KakaoService kakaoService;
     private final ResponseService responseService;
 
-    @Value("${url.base}")
+    @Value("${spring.url.base}")
     private String baseUrl;
 
     @Value("${social.kakao.client-id}")
