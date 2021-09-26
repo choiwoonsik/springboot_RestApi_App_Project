@@ -1,0 +1,33 @@
+logging:
+  level:
+    root: warn
+    com.restApi.restApiSpringBootApp: info
+  file:
+    path: /home/ec2-user/api/log
+
+  logback:
+    rollingpolicy:
+      max-history: 7
+
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url:
+    driver-class-name:
+    username:
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties.hibernate:
+      hbm2ddl.auto: none
+      format_sql: true
+    generate-ddl: false
+    show-sql: true
+    open-in-view: false
+  url:
+    base: "deployServerBaseUrl"
+  config:
+    activate:
+      on-profile: dev

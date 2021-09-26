@@ -1,0 +1,28 @@
+logging:
+  level:
+    root: warn
+    com.restApi.restApiSpringBootApp: debug #debug info warn error fatal off
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/restApi
+    driver-class-name: org.h2.Driver
+    username: sa
+  messages:
+    basename: i18n/exception
+    encoding: UTF-8
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties.hibernate:
+      hbm2ddl.auto : update
+      format_sql: true
+    show-sql: true
+    generate-ddl: true
+    open-in-view: false
+  url:
+    base: http://localhost:8080
+  config:
+    activate:
+      on-profile: local
